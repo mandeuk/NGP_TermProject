@@ -9,9 +9,10 @@ GLvoid Reshape(int w, int h);
 SOCKET sock;
 
 //캐릭터 구조체
-Player player;
-Player_Other * header;
-Player_Other * pointer;
+Player player_client;
+Player_Socket player_socket;
+Server_Player server_data;
+int client_imei = -1;//몇번째 클라인지 기억하기
 
 void Mouse(int button, int state, int x, int y);
 void Keyboard(unsigned char key, int x, int y);
@@ -112,19 +113,6 @@ void main()
 		Keybuffer[i] = false;
 
 	//필요한 콜백 함수 설정
-	player.socket.x = 0;//플레이어 구조체 초기화
-	player.socket.y = 0;
-	player.socket.z = 0;
-	player.camxrotate = 0;
-	player.camyrotate = -90;
-	player.Viewx = 0;
-	player.Viewy = 0;
-	player.Viewz = -1000;
-	header = (Player_Other*)malloc(sizeof(Player_Other));
-	header->x = 500;
-	header->y = 0;
-	header->z = 2000;
-	header->next = NULL;
 
 	glutDisplayFunc(DrawScene); //출력 함수의 지정
 	glutTimerFunc(Time, TimerFunction, 1);//타이머 콜백 함수
@@ -218,22 +206,7 @@ GLvoid DrawScene(GLvoid)
 	//플레이어 그리기 종료
 
 
-	//연결리스트로 짜여진 다른 플레이어들 그리기
-	pointer = header;//헤더는 고정 포인터를 이용해 리스트를 이동하며 그려준다.
-	while (1)//다른 플레이어 그리기 시작
-	{
-		glPushMatrix();
-		glColor3f(0, 255, 255);
-		glTranslatef(pointer->x, pointer->y, pointer->z);
-		glScalef(0.7f, 2.0f, 0.7f);
-		glutSolidCube(100);
-		glPopMatrix();
-
-		if (pointer->next == NULL)
-			break;
-		else
-			pointer = pointer->next;
-	}//end of while(다른 플레이어 그리기)
+	//다른 캐릭터 그려야 함
 	
 
 

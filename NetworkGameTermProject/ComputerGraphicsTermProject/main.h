@@ -34,21 +34,18 @@ typedef struct Bullet
 typedef struct Player_Socket
 {
 	float x, y, z;
+	float camxrotate, camyrotate;
 }Player_Socket;
 
-typedef struct Player_Other
+typedef struct Server_Player
 {
-	float x, y, z;
-	Player_Other * next;
+	Player_Socket Players[8];
 }Player_Other;
 
 typedef struct Player
 {
-	float camxrotate, camyrotate;
 	float Viewx, Viewy, Viewz;
 	float Camx, Camy, Camz;
-
-	Player_Socket socket;
 }Player;
 
 
