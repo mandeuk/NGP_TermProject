@@ -1,0 +1,7 @@
+﻿  main.cpp
+c:\users\kwon6\documents\onedrive\2016년도 3학년 2학기 수업자료\네트워크 게임 프로그래밍\networkgametermproject_server\main.cpp(110): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdlib.h(1316): note: 'itoa' 선언을 참조하십시오.
+c:\users\kwon6\documents\onedrive\2016년도 3학년 2학기 수업자료\네트워크 게임 프로그래밍\networkgametermproject_server\main.cpp(93): warning C4101: 'buf' :참조되지 않은 지역 변수입니다.
+c:\users\kwon6\documents\onedrive\2016년도 3학년 2학기 수업자료\네트워크 게임 프로그래밍\networkgametermproject_server\main.cpp(230): warning C4101: 'hostname' :참조되지 않은 지역 변수입니다.
+  TCPServer_FixedVariable.vcxproj -> C:\Users\kwon6\Documents\OneDrive\2016년도 3학년 2학기 수업자료\네트워크 게임 프로그래밍\NetworkGameTermProject_Server\Debug\NetworkGameProgramingTerm_Server.exe
+  TCPServer_FixedVariable.vcxproj -> C:\Users\kwon6\Documents\OneDrive\2016년도 3학년 2학기 수업자료\네트워크 게임 프로그래밍\NetworkGameTermProject_Server\Debug\NetworkGameProgramingTerm_Server.pdb (Full PDB)
