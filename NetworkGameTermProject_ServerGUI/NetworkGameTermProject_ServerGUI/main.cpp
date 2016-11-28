@@ -325,6 +325,7 @@ DWORD WINAPI Thread_Server( LPVOID arg ) {
 		server_data.player[client_imei].z = player->socket.z;
 		server_data.player[client_imei].team = player->socket.team;
 		server_data.player[client_imei].live = player->socket.live;
+		server_data.player[client_imei].character_down_state = player->socket.character_down_state;
 		strcpy( server_data.player[client_imei].nickName, player->socket.nickName );
 		if ( getnickName == false && strcmp( server_data.player[client_imei].nickName, "") != 0 ) {
 			sprintf( buf, "Player %d : %s [ Team : %d ]", client_imei, server_data.player[client_imei].nickName, client_imei % 2 );
@@ -441,5 +442,6 @@ void clrUser( int client_imei ) {
 	server_data.player[client_imei].z = -1000.0f;
 	server_data.player[client_imei].live = false;
 	server_data.player[client_imei].team = false;
+	server_data.player[client_imei].character_down_state = 0;
 	strcpy( server_data.player[client_imei].nickName, "" );
 }

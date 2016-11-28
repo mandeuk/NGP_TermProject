@@ -44,7 +44,7 @@
 
 typedef struct Player_Animation
 {
-	int character_up_state = CHARACTER_PISTOL, character_down_state = CHARACTER_STAND, legtimer = 0;//up_state는 상체, down_state는 하체
+	int character_up_state = CHARACTER_PISTOL, legtimer = 0;//up_state는 상체, down_state는 하체
 	float head_angle_x = 0;//머리회전
 	float left_leg_x = 0, left_leg_y = 0, left_knee_x = 0, right_leg_x = 0, right_leg_y = 0, right_knee_x = 0, left_leg_z = 0, right_leg_z = 0;//다리회전
 	bool sight = false, jump = false, crouch = false;//정조준, 점프상태, 앉기상태
@@ -64,6 +64,7 @@ typedef struct Player_Socket
 	bool live;
 	bool team;
 	char nickName[16];
+	int character_down_state;
 }Player_Socket;
 
 typedef struct Server_Player
@@ -78,6 +79,7 @@ typedef struct Player
 	float Viewx, Viewy, Viewz;
 	float Camx, Camy, Camz;
 	Player_Animation Ani;
+	int character_down_state;
 }Player;
 
 
@@ -97,6 +99,9 @@ int get_ClientTeam( SOCKET sock );
 
 //맵 그리기
 void DrawMap();
+
+//애니메이션 동작
+void PlayAnimation(Player_Animation &Ani, const int character_down_state);
 
 //박스그리기
 void drawBoxFront( int, bool, GLuint );//박스 그리는 함수

@@ -1,8 +1,8 @@
 #include "main.h"
 
-void PlayAnimation(Player_Animation &Ani)
+void PlayAnimation(Player_Animation &Ani, const int character_down_state)
 {
-	switch (Ani.character_down_state) {
+	switch (character_down_state) {
 	case 0://가만히 서있을 때
 		Ani.left_leg_x = 0;
 		Ani.left_leg_y = 0;

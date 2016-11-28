@@ -26,7 +26,6 @@ void TimerFunction( int value );
 
 void Target( int x, int y );//카메라 시점관련 함수
 void Keyinput( int key );//키보드 동시입력을 위한 입력처리 함수
-void Animation();
 //void crashCheck();//충돌체크
 
 //타이머 갱신시간
@@ -116,7 +115,7 @@ void main()
 	srand( (unsigned)time( NULL ) );
 
 	HANDLE hThread;
-	//hThread = CreateThread( NULL, 0, DialogBox_Thread, 0, 0, NULL );
+	hThread = CreateThread( NULL, 0, DialogBox_Thread, 0, 0, NULL );
 
 	//윈도우 초기화 및 생성
 	glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH ); //디스플레이 모드 설정
@@ -374,8 +373,11 @@ void Keyboard( unsigned char key, int x, int y )
 		for ( int i = 0; i < MAX_Client; i++ )
 			printf( "%d", server_data.Players[i].live );
 		printf( "\n" );
-		for ( int i = 0; i < MAX_Client; i++ )
-			printf( "%d", server_data.Players[i].team );
+		for (int i = 0; i < MAX_Client; i++)
+			printf("%d", server_data.Players[i].character_down_state);
+
+		//for ( int i = 0; i < MAX_Client; i++ )
+		//	printf( "%d", server_data.Players[i].team );
 		break;
 	case 27://ESC
 		if ( GameStart )
@@ -402,7 +404,7 @@ void Keyboardup( unsigned char key, int x, int y )
 {
 	Keybuffer[key] = false;
 	if ( !Keybuffer['w'] && !Keybuffer['a'] && !Keybuffer['s'] && !Keybuffer['d'] )
-		player_client.Ani.character_down_state = CHARACTER_STAND;
+		player_socket.character_down_state = CHARACTER_STAND;
 	if ( Keybuffer['x'] == false )
 	{
 		//Charspeed = 8;
@@ -422,23 +424,34 @@ void TimerFunction( int value )
 		if ( RotateCam )
 			glutWarpPointer( width / 2, height / 2 );//해상도에 따라 유동적으로 바뀌도록
 
-		player_socket.y += gravity;
-		if (player_client.Ani.jump)
+
+		//간단충돌체크
+		player_socket.y += gravity;//중력작용
+		if (player_client.Ani.jump)//점프상태일 경우 중력이 작용
 		{
 			gravity -= 0.5;
-			player_client.Ani.character_down_state = CHARACTER_CROUCH_JUMP;
+			player_socket.character_down_state = CHARACTER_CROUCH_JUMP;
 		}
 
-		if ( player_socket.y < 0 )
+		if ( player_socket.y < 0 )//땅바닥을 뚫고 내려가는걸 방지
 		{
 			player_socket.y = 0;
 			gravity = 0;
-			player_client.Ani.character_down_state = CHARACTER_STAND;
+			player_socket.character_down_state = CHARACTER_STAND;//바닥에서 점프상태로 고정되는 현상 방지
 			player_client.Ani.jump = false;
 		}
 
 
-		
+		//애니메이션 갱신부분
+		PlayAnimation(player_client.Ani, player_socket.character_down_state);//플레이어 애니메이션
+		for (int i = 0; i < MAX_Client; i++)//다른 플레이어 애니메이션
+		{
+			if(i == client_imei){}
+			else if (server_data.Players[i].live)
+			{
+				PlayAnimation(Ani[i], server_data.Players[i].character_down_state);
+			}
+		}
 
 
 		for ( int i = 0; i < 256; i++ )
@@ -493,9 +506,9 @@ void Keyinput( int key )
 		player_socket.x += fTime*Charspeed * cos( (-player_socket.camxrotate - 90) * 3.141592 / 180 );
 		player_socket.z += fTime*Charspeed * sin( (-player_socket.camxrotate - 90) * 3.141592 / 180 );
 		if (player_client.Ani.jump)
-			player_client.Ani.character_down_state = CHARACTER_CROUCH_JUMP;
+			player_socket.character_down_state = CHARACTER_CROUCH_JUMP;
 		else
-			player_client.Ani.character_down_state = CHARACTER_WALK;
+			player_socket.character_down_state = CHARACTER_WALK;
 		//printf("%f, %f, %f\n", fTime, Charspeed, fTime*Charspeed);
 	}
 	else if ( key == 's' )
@@ -503,26 +516,26 @@ void Keyinput( int key )
 		player_socket.x -= fTime*Charspeed * cos( (-player_socket.camxrotate - 90) * 3.141592 / 180 );
 		player_socket.z -= fTime*Charspeed * sin( (-player_socket.camxrotate - 90) * 3.141592 / 180 );
 		if (player_client.Ani.jump)
-			player_client.Ani.character_down_state = CHARACTER_CROUCH_JUMP;
+			player_socket.character_down_state = CHARACTER_CROUCH_JUMP;
 		else
-			player_client.Ani.character_down_state = CHARACTER_WALK;
+			player_socket.character_down_state = CHARACTER_WALK;
 	}
 	if ( key == 'a' )
 	{
 		player_socket.x -= fTime*Charspeed * cos( (-player_socket.camxrotate) * 3.141592 / 180 );
 		player_socket.z -= fTime*Charspeed * sin( (-player_socket.camxrotate) * 3.141592 / 180 );
 		if (player_client.Ani.jump)
-			player_client.Ani.character_down_state = CHARACTER_CROUCH_JUMP;
+			player_socket.character_down_state = CHARACTER_CROUCH_JUMP;
 		else
-			player_client.Ani.character_down_state = CHARACTER_WALK;
+			player_socket.character_down_state = CHARACTER_WALK;
 	}
 	else if ( key == 'd' )
 	{
 		player_socket.x += fTime*Charspeed * cos( (-player_socket.camxrotate) * 3.141592 / 180 );
 		player_socket.z += fTime*Charspeed * sin( (-player_socket.camxrotate) * 3.141592 / 180 );
 		if (player_client.Ani.jump)
-			player_client.Ani.character_down_state = CHARACTER_CROUCH_JUMP;
+			player_socket.character_down_state = CHARACTER_CROUCH_JUMP;
 		else
-			player_client.Ani.character_down_state = CHARACTER_WALK;
+			player_socket.character_down_state = CHARACTER_WALK;
 	}
 }
