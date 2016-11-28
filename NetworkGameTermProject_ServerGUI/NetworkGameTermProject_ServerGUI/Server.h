@@ -10,6 +10,7 @@ typedef struct Player_Socket {
 	float camxrotate = -1000, camyrotate = -1000;
 	bool live = false;
 	bool team = false; // 팀을 1팀 2팀을 T/F로 나눠버림
+	char nickName[16];
 	/*
 	동작상태  : 걷기, 정지, 점프
 

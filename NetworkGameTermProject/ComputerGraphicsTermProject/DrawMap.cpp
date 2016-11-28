@@ -1,11 +1,16 @@
 #include "main.h"
 
-void DrawMap()
+void init_Map_Texture() 
 {
+	Load_TextureBMP( map_object, 0, "ImageData/Wall/wall.bmp" );
+}
+
+void DrawMap()
+{	
 	glPushMatrix(); //Save
 	glEnable(GL_TEXTURE_2D);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	//glBindTexture(GL_TEXTURE_2D, image);
+	glBindTexture(GL_TEXTURE_2D, map_object[0] );
 	glBegin(GL_QUADS);
 		//인호's 샘플코드
 	glTexCoord2d(1.0f, 1.0f);

@@ -32,6 +32,8 @@ DWORD WINAPI Thread_Server( LPVOID arg ); // 접속후 파일 전송을 받기위한 스레드
 DWORD WINAPI Draw_Map( LPVOID arg ); // 서버 GUI에 맵을 그려주기 위하여?
 int recvn( SOCKET s, char *buf, int len, int flags );
 
+void clrUser( int ); // 유저가 나가거나 강퇴시 정보를 지운다.
+
 
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow ) {
 	// 소켓 통신 스레드 생성
@@ -256,8 +258,33 @@ DWORD WINAPI Thread_Server( LPVOID arg ) {
 		DisplayText( hList, "클라이언트 종료: IP 주소=%s, 포트 번호=%d [인원 초과]\n", inet_ntoa( clientaddr.sin_addr ), ntohs( clientaddr.sin_port ) );
 		return 0;
 	}
+	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// char nickName 받아오기
+	//retval = recvn( sock, (char *)&len, sizeof( int ), 0 ); // 데이터 받기(고정 길이)
+	//if ( retval == SOCKET_ERROR ) {
+	//	err_display( "recv()" );
+	//}
+	//else if ( retval == 0 ) {
+	//}
 
+	//char *buf = new char[len]; // 전송된 길이를 알고 있으니 크기에 맞춰서 buf를 늘려주자!
+
+	//retval = recvn( sock, buf, len, 0 );
+	//if ( retval == SOCKET_ERROR ) {
+	//	err_display( "recv()" );
+	//}
+
+
+	//for ( int i = 0; i < MAX_Client; ++i ) {
+	//	if ( strcmp( buf, server_data.player[i].nickName) != 0 ) {
+
+	//	}
+
+	//}
+
+	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// ↓ client_imei 를 바탕으로 버튼에 (아이피:포트) 를 넣어준다.
+	bool getnickName = false; // 캐릭터 네임이 있을경우 대체를 하기 위하여
 	sprintf( buf, "Player %d : %s:%d [ Team : %d ]", client_imei, inet_ntoa( clientaddr.sin_addr ), ntohs( clientaddr.sin_port ), client_imei % 2 );
 	SendMessage( hPlayer[client_imei], WM_SETTEXT, 0, (LPARAM)buf );
 	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -298,6 +325,12 @@ DWORD WINAPI Thread_Server( LPVOID arg ) {
 		server_data.player[client_imei].z = player->socket.z;
 		server_data.player[client_imei].team = player->socket.team;
 		server_data.player[client_imei].live = player->socket.live;
+		strcpy( server_data.player[client_imei].nickName, player->socket.nickName );
+		if ( getnickName == false && strcmp( server_data.player[client_imei].nickName, "") != 0 ) {
+			sprintf( buf, "Player %d : %s [ Team : %d ]", client_imei, server_data.player[client_imei].nickName, client_imei % 2 );
+			SendMessage( hPlayer[client_imei], WM_SETTEXT, 0, (LPARAM)buf );
+			getnickName = true;
+		}
 
 		//printf( "Xrotate : %f\n", server_data.player[0].camxrotate );
 
@@ -320,11 +353,7 @@ DWORD WINAPI Thread_Server( LPVOID arg ) {
 		if ( client[client_imei] == false ) {
 			// 서버의 권한으로 강퇴 시킬경우
 			closesocket( client_sock );
-			server_data.player[client_imei].camxrotate = -1000.0f;
-			server_data.player[client_imei].camyrotate = -1000.0f;
-			server_data.player[client_imei].x = -1000.0f;
-			server_data.player[client_imei].y = -1000.0f;
-			server_data.player[client_imei].z = -1000.0f;
+			clrUser( client_imei );
 			DisplayText( hList, "%d번 클라이언트를 강제 종료 시켰습니다..!", client_imei );
 			sprintf( buf, "Player %d : " );
 			SendMessage( hPlayer[client_imei], WM_SETTEXT, 0, (LPARAM)buf );
@@ -333,11 +362,7 @@ DWORD WINAPI Thread_Server( LPVOID arg ) {
 
 	}
 	closesocket( client_sock );
-	server_data.player[client_imei].camxrotate = -1000.0f;
-	server_data.player[client_imei].camyrotate = -1000.0f;
-	server_data.player[client_imei].x = -1000.0f;
-	server_data.player[client_imei].y = -1000.0f;
-	server_data.player[client_imei].z = -1000.0f;
+	clrUser( client_imei );
 	sprintf( buf, "Player %d : ", client_imei );
 	SendMessage( hPlayer[client_imei], WM_SETTEXT, 0, (LPARAM)buf );
 	client[client_imei] = false;
@@ -406,4 +431,15 @@ int recvn( SOCKET s, char *buf, int len, int flags ) {
 	}
 
 	return (len - left);
+}
+
+void clrUser( int client_imei ) {
+	server_data.player[client_imei].camxrotate = -1000.0f;
+	server_data.player[client_imei].camyrotate = -1000.0f;
+	server_data.player[client_imei].x = -1000.0f;
+	server_data.player[client_imei].y = -1000.0f;
+	server_data.player[client_imei].z = -1000.0f;
+	server_data.player[client_imei].live = false;
+	server_data.player[client_imei].team = false;
+	strcpy( server_data.player[client_imei].nickName, "" );
 }

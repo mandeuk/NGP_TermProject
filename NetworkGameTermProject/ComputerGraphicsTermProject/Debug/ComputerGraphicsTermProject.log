@@ -1,3 +1,18 @@
-﻿  mmain.cpp
+﻿  Win_Sock.cpp
+  UI_Draw.cpp
+  PlayAnimation.cpp
+  mmain.cpp
+c:\users\mandeuk\documents\github\ngp_termproject\networkgametermproject\computergraphicstermproject\mmain.cpp(106): warning C4800: 'int': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+c:\users\mandeuk\documents\github\ngp_termproject\networkgametermproject\computergraphicstermproject\mmain.cpp(118): warning C4101: 'hThread' :참조되지 않은 지역 변수입니다.
+  LoadZombieTexture.cpp
+  DrawZombie.cpp
+  DrawMap.cpp
+  DrawCharacter.cpp
+  DrawBox.cpp
+  DialogBox.cpp
+  코드를 생성하고 있습니다...
+  LoadCharacterTexture.cpp
+  LoadBMP.cpp
+  코드를 생성하고 있습니다...
   ComputerGraphicsTermProject.vcxproj -> C:\Users\Mandeuk\Documents\GitHub\NGP_TermProject\NetworkGameTermProject\Debug\ComputerGraphicsTermProject.exe
   ComputerGraphicsTermProject.vcxproj -> C:\Users\Mandeuk\Documents\GitHub\NGP_TermProject\NetworkGameTermProject\Debug\ComputerGraphicsTermProject.pdb (Full PDB)

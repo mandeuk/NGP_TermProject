@@ -1,6 +1,7 @@
 #include "main.h"
 
-void drawCharacter(Player_Socket *player_socket, bool sight, int character_up_state, float right_leg_x, float right_leg_z, float left_leg_x, float left_leg_z, float right_knee_x, float left_knee_x)
+//void drawCharacter(Player_Socket *player_socket, bool sight, int character_up_state, float right_leg_x, float right_leg_z, float left_leg_x, float left_leg_z, float right_knee_x, float left_knee_x)
+void drawCharacter(Player_Socket *player_socket, Player_Animation *Ani)
 {
 	glPushMatrix();//±×¸®±â ½ºÅ¸Æ®
 	glTranslated(player_socket->x, player_socket->y+140, player_socket->z);//
@@ -29,10 +30,10 @@ void drawCharacter(Player_Socket *player_socket, bool sight, int character_up_st
 	glPopMatrix(); //¸öÅë end
 
 
-	if (sight) {}
+	if (Ani->sight) {}
 	else
 	{
-		if (character_up_state == CHARACTER_PISTOL)
+		if (Ani->character_up_state == CHARACTER_PISTOL)
 		{
 			glPushMatrix(); //Save ¿À¸¥ÆÈ ¾î²²
 			glTranslated(-45, 44, 0);
@@ -91,7 +92,7 @@ void drawCharacter(Player_Socket *player_socket, bool sight, int character_up_st
 			glPopMatrix();//¿ÞÆÈ ÆÈ²ÞÄ¡ Á¾·á
 			glPopMatrix();//¿ÞÆÈ¾î²² Á¾·á
 		}
-		else if (character_up_state == 0)
+		else if (Ani->character_up_state == 0)
 		{
 			glPushMatrix(); //Save ¿À¸¥ÆÈ ¾î²²
 			glTranslated(-45, 44, 0);
@@ -147,9 +148,9 @@ void drawCharacter(Player_Socket *player_socket, bool sight, int character_up_st
 
 	glPushMatrix(); //Save ¿À¸¥ÂÊ °ñ¹Ý
 	glTranslated(-15, -40, 0);
-	glRotatef(right_leg_x, 1, 0, 0);
+	glRotatef(Ani->right_leg_x, 1, 0, 0);
 	glRotatef(0, 0, 1, 0);
-	glRotatef(right_leg_z, 0, 0, 1);
+	glRotatef(Ani->right_leg_z, 0, 0, 1);
 	glScaled(0.5, 0.75, 0.5);
 	drawBoxFront(30, true, character_leg_top_object[0]);
 	drawBoxBack(30, true, character_leg_top_object[1]);
@@ -161,7 +162,7 @@ void drawCharacter(Player_Socket *player_socket, bool sight, int character_up_st
 
 	glPushMatrix(); //Save ¿À¸¥ÂÊ ¹«¸­
 	glTranslated(0, -45, 0);
-	glRotatef(right_knee_x, 1, 0, 0);
+	glRotatef(Ani->right_knee_x, 1, 0, 0);
 	glScaled(0.5, 0.75, 0.5);
 	drawBoxFront(30, true, character_leg_bottom_object[0]);
 	drawBoxBack(30, true, character_leg_bottom_object[1]);
@@ -176,9 +177,9 @@ void drawCharacter(Player_Socket *player_socket, bool sight, int character_up_st
 
 	glPushMatrix(); //Save ¿ÞÂÊ °ñ¹Ý
 	glTranslated(15, -40, 0);
-	glRotatef(left_leg_x, 1, 0, 0);
+	glRotatef(Ani->left_leg_x, 1, 0, 0);
 	glRotatef(0, 0, 1, 0);
-	glRotatef(left_leg_z, 0, 0, 1);
+	glRotatef(Ani->left_leg_z, 0, 0, 1);
 	glScaled(0.5, 0.75, 0.5);
 	drawBoxFront(30, true, character_leg_top_object[0]);
 	drawBoxBack(30, true, character_leg_top_object[1]);
@@ -190,7 +191,7 @@ void drawCharacter(Player_Socket *player_socket, bool sight, int character_up_st
 
 	glPushMatrix(); //Save ¿ÞÂÊ ¹«¸­
 	glTranslated(0, -45, 0);
-	glRotatef(left_knee_x, 1, 0, 0);
+	glRotatef(Ani->left_knee_x, 1, 0, 0);
 	glScaled(0.5, 0.75, 0.5);
 	drawBoxFront(30, true, character_leg_bottom_object[0]);
 	drawBoxBack(30, true, character_leg_bottom_object[1]);
